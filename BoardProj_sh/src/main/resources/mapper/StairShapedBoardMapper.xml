@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTDMapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.StairShapedBoardMapper">
+
+	<select id="selectBoardList" resultType="StairShapedBoardVO"
+		parameterType="map">
+		SELECT * FROM (
+		SELECT ROWNUM rnum, ssb.* FROM (
+		SELECT LEVEL, no,
+		writer, title, regdate, hits
+		FROM stair_shaped_board
+		<where>
+			<if test="category!=null">
+				<choose>
+					<when test="like=='t'.toString()">
+						UPPER(${category}) LIKE '%'||UPPER(#{search})||'%'
+					</when>
+					<when test="like=='f'.toString()">
+						${category}=#{search}
+					</when>
+				</choose>
+			</if>
+		</where>
+		START WITH prntno
+		IS NULL CONNECT BY PRIOR no=prntno
+		ORDER SIBLINGS BY
+		grpno desc
+		) ssb)
+		WHERE <![CDATA[ rnum >= #{start} AND rnum <= #{end} ]]>
+	</select>
+	
+	<select id="selectBoard" resultType="StairShapedBoardVO"
+		parameterType="int">
+		SELECT no, grpno, prntno, writer, title, content,
+		regdate, hits
+		FROM stair_shaped_board
+		WHERE no=#{no}
+	</select>
+	
+	<update id="increaseHit" parameterType="int">
+		UPDATE stair_shaped_board SET hits=hits+1 WHERE no=#{no}
+	</update>
+	
+	<select id="countBoard" resultType="int" parameterType="map">
+		SELECT COUNT(no) FROM stair_shaped_board
+		<where>
+			<if test="category!=null">
+				<choose>
+					<when test="like=='t'.toString()">
+						UPPER(${category}) LIKE '%'||UPPER(#{search})||'%'
+					</when>
+					<when test="like=='f'.toString()">
+						${category}=#{search}
+					</when>
+				</choose>
+			</if>
+		</where>
+	</select>
+	
+	<select id="getPrntGrpno" parameterType="int" resultType="int">
+		SELECT grpno FROM stair_shaped_board WHERE no=#{prntno}
+	</select>
+	
+	<insert id="insertBoard"  parameterType="StairShapedBoardVO">
+	<selectKey keyProperty="no" resultType="int" order="BEFORE">
+		SELECT stair_shaped_board_seq.NEXTVAL FROM DUAL
+	</selectKey>
+		INSERT INTO stair_shaped_board(no, grpno, prntno,
+		title, writer,
+		content)
+		VALUES(
+		<choose>
+			<when test="prntno==0">
+				#{no}, #{no}, null, #{title},
+				#{writer}, #{content}
+			</when>
+			<when test="prntno!=0">
+				#{no}, #{grpno}, #{prntno}, #{title},
+				#{writer}, #{content}
+			</when>
+		</choose>
+		)
+	</insert>
+	
+	<select id="getNoSeq" resultType="int">
+		SELECT stair_shaped_board_seq.CURRVAL FROM DUAL
+	</select>
+</mapper>

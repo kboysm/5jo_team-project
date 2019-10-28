@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Stair-shaped Board</title>
+<script type="text/javascript">
+	function backHref(page, category, search) {
+		if (category != null && search != null) {
+			location.href = "/stairShapedBoardList?nowPage=" + page
+					+ "&category=" + category + "&search=" + search;
+		}
+	}
+	function backHref(page) {
+		location.href = "/stairShapedBoardList?nowPage=" + page;
+	}
+
+	function pageHref(page) {
+		location.href = "/stairShapedBoard?smallNowPage=" + page;
+	}
+	
+	function boardHref(no, page) {
+		location.href="/stairShapedBoard?no="+no+"&nowPage="+page;
+	}
+</script>
+</head>
+<body>
+	<input type="hidden" name="nowPage" th:value="${nowPage}">
+	<input type="hidden" name="category" th:value="${category}">
+	<input type="hidden" name="search" th:value="${search}">
+	<div th:object="${thisBoard}">
+		<div th:text="*{title}"></div>
+		<div>
+			<span th:text="*{writer}"></span><span th:text="*{hits}"></span><span
+				th:text="*{#dates.format(regdate,'yy.MM.dd hh:mm')}"></span>
+		</div>
+		<div th:text="*{content}"></div>
+	</div>
+	<div th:include="stairShapedBoardList :: boardListTable"></div>
+	<span style="cursor: pointer;" th:attr="data-category=${category},data-search=${search}"
+			th:onclick="|javascript:backHref(${nowPage},this.getAttribute('data-category'),this.getAttribute('data-search'))|">게시글
+		목록</span>
+</body>
+</html>

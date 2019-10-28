@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Stair-shaped Board</title>
+</head>
+<body>
+<form th:action="@{/stairShapedBoardInsert}" th:object="${stairShapedBoardVO}" method="post">
+<input type="hidden" th:name="prntno" th:value="0">
+제목: <input type="text" size="30" th:field="*{title}"><br>
+글쓴이: <input type="text" size="10" th:field="*{writer}"><br>
+내용: <textarea rows="30" cols="100" th:field="*{content}"></textarea><br>
+<input type="submit" value="등록">
+</form>
+</body>
+</html>
