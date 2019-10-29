@@ -30,7 +30,7 @@ public class PagingVO {
 	
 	public void pageSetting() {
 		totalPage=(total-1)/cntPerPage+1;
-		startPage=nowPage-nowPage%cntPerBlock+1;
+		startPage=(nowPage-1)-(nowPage-1)%cntPerBlock+1;
 		endPage=startPage+cntPerBlock-1;
 		if(endPage>totalPage)
 			endPage=totalPage;

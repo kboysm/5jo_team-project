@@ -1,5 +1,12 @@
 package com.example.demo.controller;
 
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,39 +41,70 @@ public class StairShapedBoardController {
 			vo = new PagingVO(nowPage, service.countBoard());
 			model.addAttribute("boardList", service.getBoardList(vo.getStart(), vo.getEnd()));
 		}
-		System.out.println(vo.getStartPage());
-		System.out.println(vo.getTotalPage());
-		System.out.println(vo.getEndPage());
 		model.addAttribute("paging", vo);
 		model.addAttribute("nowPage",nowPage);
 		model.addAttribute("category",category);
 		model.addAttribute("search",search);
 	}
-
+	
 	
 	@RequestMapping("stairShapedBoard")
-	public void stairShapedBoard(@RequestParam(defaultValue = "1") int smallNowPage, @RequestParam(defaultValue = "1") int nowPage, String category, String search, int no, Model model) {
+	public void stairShapedBoard(@RequestParam(defaultValue = "1") int nowPage, @RequestParam(defaultValue = "1") int smallNowPage, String category, String search, int no, Model model) {
 		StairShapedBoardVO board = service.getBoard(no);
 		String grpno=Integer.toString(board.getGrpno());
-		model.addAttribute("thisBoard", board);
-		PagingVO vo = new PagingVO(smallNowPage, service.countBoardEq("grpno",grpno));
+		PagingVO vo = new PagingVO(smallNowPage, service.countBoardEq("grpno", grpno));
+		vo.setCntPerPage(5);
+		vo.pageSetting();
 		model.addAttribute("boardList", service.getBoardListEq(vo.getStart(), vo.getEnd(), "grpno", grpno));
 		model.addAttribute("paging", vo);
+		model.addAttribute("grpno",board.getGrpno());
+		model.addAttribute("thisBoard", board);
 		model.addAttribute("nowPage",nowPage);
+		model.addAttribute("smallNowPage",smallNowPage);
 		model.addAttribute("category",category);
 		model.addAttribute("search",search);
+		model.addAttribute("beside",service.besideBoard(no));
+		model.addAttribute("total",service.countBoard());
 	}
 
 	@GetMapping("stairShapedBoardInsertForm")
-	public void stairShapedBoardInsertForm(@ModelAttribute StairShapedBoardVO board) {
-
+	public void stairShapedBoardInsertForm(@ModelAttribute("board") StairShapedBoardVO board, @RequestParam(defaultValue = "0") int prntno) {
+		board.setPrntno(prntno);
 	}
 
 	@PostMapping("stairShapedBoardInsert")
-	public String stairShapedBoardInsert(@ModelAttribute StairShapedBoardVO board, Model model) {
+	public String stairShapedBoardInsert(@ModelAttribute("board") StairShapedBoardVO board, Model model) {
 		int no=service.insertBoard(board);
-		System.out.println(no);
-		return "forward:stairShapedBoard?no="+no;
+		return "redirect:stairShapedBoard?no="+no;
+	}
+	
+	@GetMapping("stairShapedBoardUpdateForm")
+	public void stairShapedBoardUpdateForm(int no, Model model) {
+		model.addAttribute("board",service.getBoard(no));
+	}
+	
+	@PostMapping("stairShapedBoardUpdate")
+	public String stairShapedBoardUpdate(@ModelAttribute("board") StairShapedBoardVO board, Model model) {
+		service.updateBoard(board);
+		return "redirect:stairShapedBoard?no="+board.getNo();
+	}
+	@GetMapping("stairShapedBoardDelete")
+	public String stairShapedBoardDelete(int no, Model model) {
+		service.deleteBoard(no);
+		return "redirect:stairShapedBoardList";
+	}
+	
+	@GetMapping("stairShapedBoardSmallList")
+	public String stairShapedBoardSmallList(@RequestParam(defaultValue = "1") int nowPage, @RequestParam(defaultValue = "1") int smallNowPage,
+			String grpno, int no, Model model) {
+		PagingVO vo = new PagingVO(smallNowPage, service.countBoardEq("grpno", grpno));
+		vo.setCntPerPage(5);
+		vo.pageSetting();
+		model.addAttribute("nowPage",nowPage);
+		model.addAttribute("no",no);
+		model.addAttribute("boardList", service.getBoardListEq(vo.getStart(), vo.getEnd(), "grpno", grpno));
+		model.addAttribute("paging", vo);
+		return "stairShapedBoardListFrag :: boardListTable";
 	}
 
 }

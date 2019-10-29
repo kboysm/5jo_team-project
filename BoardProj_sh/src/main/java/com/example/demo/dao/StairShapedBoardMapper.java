@@ -1,10 +1,10 @@
 package com.example.demo.dao;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.example.demo.vo.BesideBoardVO;
 import com.example.demo.vo.StairShapedBoardVO;
 
 @Mapper
@@ -53,4 +53,7 @@ public interface StairShapedBoardMapper {
 	int insertBoard(StairShapedBoardVO board);
 	int getNoSeq();
 	int increaseHit(int no);
+	int updateBoard(StairShapedBoardVO board);
+	int deleteBoard(int no);
+	BesideBoardVO besideBoard(int no);
 }

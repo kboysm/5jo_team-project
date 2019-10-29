@@ -3,23 +3,102 @@
 <head>
 <meta charset="UTF-8">
 <title>Stair-shaped Board</title>
-<script type="text/javascript">
-	function backHref(page, category, search) {
-		if (category != null && search != null) {
-			location.href = "/stairShapedBoardList?nowPage=" + page
-					+ "&category=" + category + "&search=" + search;
-		}
-	}
-	function backHref(page) {
-		location.href = "/stairShapedBoardList?nowPage=" + page;
-	}
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<link rel="stylesheet" th:href="@{/css/stairShapedBoard.css}">
+<style type="text/css" >
 
-	function pageHref(page) {
-		location.href = "/stairShapedBoard?smallNowPage=" + page;
+</style>
+<script th:inline="javascript" type="text/javascript">
+	let grpno;
+	let nowPage;
+	let startPage;
+	$(function() {
+		showBoard();
+		nowPage=/*[[${nowPage}]]*/;
+		grpno=/*[[${grpno}]]*/;
+		startPage=/*[[${paging.startPage}]]*/;
+		let smallNowPage=/*[[${smallNowPage}]]*/;
+		getSmallBoardList(smallNowPage);
+		
+		$('#backList').click(backHref);
+		besideClickAtr();
+	});
+	
+	function besideClickAtr(){
+		let smallNowPage=/*[[${smallNowPage}]]*/;
+		
+		$('.beside').click(function(){
+			console.log($(this).val());
+			boardHref($(this).val(), smallNowPage);
+		});
 	}
 	
-	function boardHref(no, page) {
-		location.href="/stairShapedBoard?no="+no+"&nowPage="+page;
+	function arrowClickAtr(){
+		let cntPerBlock=/*[[${paging.cntPerBlock}]]*/;
+		
+		$('#arrowLeft').click(function(){
+			startPage-=cntPerBlock;
+			pageNumUpdate(startPage);
+		});
+		$('#arrowRight').click(function(){
+			startPage+=cntPerBlock;
+			pageNumUpdate(startPage);
+		});
+	}
+	
+	function pageNumUpdate(val){
+		getSmallBoardList(val);
+	}
+	
+	function backHref() {
+		if([[${category!=null}]]){
+			let category= /*[[${category}]]*/;
+			let search= /*[[${search}]]*/;
+			let url= "/stairShapedBoardList?nowPage=" + nowPage + "&category=" + category + "&search=" + search;
+			location.href = url;
+		}
+		else
+			location.href = "/stairShapedBoardList?nowPage=" + nowPage;
+	}
+
+	function boardHref(no, smallNowPage) {
+		if([[${category!=null}]]){
+			let category= /*[[${category}]]*/;
+			let search= /*[[${search}]]*/;
+			let url= "/stairShapedBoard?no=" + no + "&nowPage=" + nowPage + "&category=" + category + "&search=" + search + "&smallNowPage="+smallNowPage;
+			location.href = url;
+		}
+		else
+			location.href = "/stairShapedBoard?no=" + no + "&nowPage=" + nowPage + "&smallNowPage="+smallNowPage;
+	}
+
+	function showBoard() {
+		let str = $("#stairContent").text();
+		str = str.replace(/<br\s*\/?>/img, '\r\n'); //엔터 처리
+		$("#stairContent").text(str);
+	}
+	
+	function deleteBoard(no){
+		if(confirm("삭제하시겠습니까?"))
+			location.href = "/stairShapedBoardDelete?no="+no;
+	}
+	
+	
+	function getSmallBoardList(smallNowPage){
+		$.ajax({
+			url:'stairShapedBoardSmallList',
+			type:'get',
+			data:{'nowPage':nowPage,'smallNowPage':smallNowPage,'grpno':grpno,'no':/*[[${thisBoard.no}]]*/},
+			success:function(data){
+				$('#smallListDiv').html(data);
+				$('.pageNum').click(function(){getSmallBoardList($(this).text())});
+				arrowClickAtr();
+			},
+			error:function(error){
+				alert("error "+error.name);
+			}
+		});
 	}
 </script>
 </head>
@@ -27,17 +106,27 @@
 	<input type="hidden" name="nowPage" th:value="${nowPage}">
 	<input type="hidden" name="category" th:value="${category}">
 	<input type="hidden" name="search" th:value="${search}">
+	<a th:href="@{/stairShapedBoardUpdateForm(no=${thisBoard.no})}"><button
+			type="button">수정</button></a>
+	<button type="button"
+		th:onclick="|javascript:deleteBoard(${thisBoard.no})|">삭제</button>
 	<div th:object="${thisBoard}">
 		<div th:text="*{title}"></div>
 		<div>
-			<span th:text="*{writer}"></span><span th:text="*{hits}"></span><span
+			<span th:text="*{writer}"></span><span th:text="*{hits}"></span> <span
 				th:text="*{#dates.format(regdate,'yy.MM.dd hh:mm')}"></span>
 		</div>
-		<div th:text="*{content}"></div>
+		<p id="stairContent" th:text="*{content}"></p>
 	</div>
-	<div th:include="stairShapedBoardList :: boardListTable"></div>
-	<span style="cursor: pointer;" th:attr="data-category=${category},data-search=${search}"
-			th:onclick="|javascript:backHref(${nowPage},this.getAttribute('data-category'),this.getAttribute('data-search'))|">게시글
-		목록</span>
+	<br>
+	<br>
+	<div id="ll"></div>
+	<div id="smallListDiv"></div>
+	<br>
+	<a th:href="@{/stairShapedBoardInsertForm(prntno=${thisBoard.no})}"><button
+			type="button">답글 작성</button></a>
+	<button type="button" th:if="${beside.upNo!=-1}" class="beside" th:value="${beside.upNo}">윗글</button>
+	<button type="button" th:if="${beside.downNo!=-1}" class="beside" th:value="${beside.downNo}">아랫글</button>
+	<span id="backList" style="cursor: pointer;">게시글 목록</span>
 </body>
 </html>

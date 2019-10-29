@@ -3,21 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <title>Stair-shaped Board</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<link rel="stylesheet" th:href="@{/css/stairShapedBoard.css}">
 <style type="text/css">
+
 </style>
-<script type="text/javascript">
-	function pageHref(page, category, search) {
-		if (category != null && search != null) {
-			location.href = "/stairShapedBoardList?nowPage=" + page
-					+ "&category=" + category + "&search=" + search;
-		}
+<script th:inline="javascript" type="text/javascript">
+	$(function() {
+		$(".pageNum").click(pageHref);
+		arrowClickAtr();
+	})
+	
+	function arrowClickAtr(){
+		let startPage=/*[[${paging.startPage}]]*/;
+		let cntPerBlock=/*[[${paging.cntPerBlock}]]*/;
+		$('#arrowLeft').click(function(){pageNumUpdate(startPage-cntPerBlock);});
+		$('#arrowRight').click(function(){pageNumUpdate(startPage+cntPerBlock);});
 	}
-	function pageHref(page) {
-		location.href = "/stairShapedBoardList?nowPage=" + page;
+
+	function pageNumUpdate(val){
+		location.href = "/stairShapedBoardList?nowPage=" + val;
+	}
+	
+	function pageHref() {
+		if([[${category!=null}]]){
+			let category= /*[[${category}]]*/;
+			let search= /*[[${search}]]*/;
+			let url= "/stairShapedBoardList?nowPage=" + $(this).text() + "&category=" + category + "&search=" + search;
+			location.href = url;
+		}
+		else
+			location.href = "/stairShapedBoardList?nowPage=" + $(this).text();
 	}
 
 	function boardHref(no, page) {
-		location.href = "/stairShapedBoard?no=" + no + "&nowPage=" + page;
+		if([[${category!=null}]]){
+			let category= /*[[${category}]]*/;
+			let search= /*[[${search}]]*/;
+			let url= "/stairShapedBoard?no=" + no + "&nowPage=" + page + "&category=" + category + "&search=" + search;
+			location.href = url;
+		}
+		else
+			location.href = "/stairShapedBoard?no=" + no + "&nowPage=" + page;
 	}
 </script>
 </head>
@@ -30,41 +58,11 @@
 			value="검색">
 	</form>
 	<br>
-	<div th:fragment="boardListTable">
-		<table>
-			<tr>
-				<td>no</td>
-				<td>writer</td>
-				<td>title</td>
-				<td>regdate</td>
-				<td>hits</td>
-			</tr>
-			<tr th:each="board : ${boardList}">
-				<td><span th:text="${board.no}"></span></td>
-				<td><span th:text="${board.writer}"></span></td>
-				<td><span th:if="${searching==null and board.level>1}"><span
-						th:each="num : ${#numbers.sequence(2,board.level)}"
-						th:if="${board.level>1}">&nbsp&nbsp</span> <img
-						th:src="@{/img/rounded-angle-arrow.png}" width=10 height=10></span>
-					<span style="cursor: pointer;"
-					th:onclick="|javascript:boardHref('${board.no}','${nowPage}')|"
-					th:text="${board.title}"></span></td>
-				<td><span th:text="${#dates.format(board.regdate, 'yy.MM.dd')}"></span></td>
-				<td><span th:text="${board.hits}"></span></td>
-			</tr>
-		</table>
-		<img th:if="${paging.startPage>1}" th:src="@{/img/past.png}"> <span
-			th:each="page : ${#numbers.sequence(paging.startPage,paging.endPage)}">
-			<span th:if="${paging.nowPage==page}" th:text="${page}"></span> <span
-			th:unless="${paging.nowPage==page}" style="cursor: pointer;"
-			th:attr="data-category=${category},data-search=${search}"
-			th:onclick="|javascript:pageHref(${page},this.getAttribute('data-category'),this.getAttribute('data-search'))|"
-			th:text="${page}"></span>
-		</span> <img th:if="${paging.endPage<paging.totalPage}"
-			th:src="@{/img/next.png}"> <br> <a
-			th:href="@{/stairShapedBoardInsertForm}">게시글 작성</a> <a
-			th:href="@{/stairShapedBoardList}" th:if="${searching!=null}">전체
-			게시글 목록</a>
-	</div>
+	<div th:include="stairShapedBoardListFrag :: boardListTable"></div>
+
+	<br>
+	<a th:href="@{/stairShapedBoardInsertForm}">게시글 작성</a>
+	<a th:href="@{/stairShapedBoardList}">최신
+		게시글 목록</a>
 </body>
 </html>

@@ -7,8 +7,7 @@ PUBLIC "-//mybatis.org//DTDMapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapp
 		parameterType="map">
 		SELECT * FROM (
 		SELECT ROWNUM rnum, ssb.* FROM (
-		SELECT LEVEL, no,
-		writer, title, regdate, hits
+		SELECT LEVEL, no, writer, title, regdate, hits
 		FROM stair_shaped_board
 		<where>
 			<if test="category!=null">
@@ -24,16 +23,14 @@ PUBLIC "-//mybatis.org//DTDMapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapp
 		</where>
 		START WITH prntno
 		IS NULL CONNECT BY PRIOR no=prntno
-		ORDER SIBLINGS BY
-		grpno desc
+		ORDER SIBLINGS BY grpno desc
 		) ssb)
 		WHERE <![CDATA[ rnum >= #{start} AND rnum <= #{end} ]]>
 	</select>
 	
 	<select id="selectBoard" resultType="StairShapedBoardVO"
 		parameterType="int">
-		SELECT no, grpno, prntno, writer, title, content,
-		regdate, hits
+		SELECT no, grpno, prntno, writer, title, content, regdate, hits
 		FROM stair_shaped_board
 		WHERE no=#{no}
 	</select>
@@ -66,9 +63,7 @@ PUBLIC "-//mybatis.org//DTDMapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapp
 	<selectKey keyProperty="no" resultType="int" order="BEFORE">
 		SELECT stair_shaped_board_seq.NEXTVAL FROM DUAL
 	</selectKey>
-		INSERT INTO stair_shaped_board(no, grpno, prntno,
-		title, writer,
-		content)
+		INSERT INTO stair_shaped_board(no, grpno, prntno, title, writer, content)
 		VALUES(
 		<choose>
 			<when test="prntno==0">
@@ -85,5 +80,26 @@ PUBLIC "-//mybatis.org//DTDMapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapp
 	
 	<select id="getNoSeq" resultType="int">
 		SELECT stair_shaped_board_seq.CURRVAL FROM DUAL
+	</select>
+	
+	<update id="updateBoard" parameterType="StairShapedBoardVO">
+		UPDATE stair_shaped_board SET title=#{title}, content=#{content}, hits=hits-1 WHERE no=#{no}
+	</update>
+	
+	<delete id="deleteBoard" parameterType="int">
+		DELETE FROM stair_shaped_board WHERE no=#{no}
+	</delete>
+	
+	<select id="besideBoard" parameterType="int" resultType="BesideBoardVO">
+		SELECT * FROM (
+		SELECT no, LEAD(no,1,'-1') OVER (ORDER BY rnum) downno, 
+		LAG(no,1,'-1') OVER (ORDER BY rnum) upno
+ 		FROM (
+ 		SELECT rownum as rnum, no FROM stair_shaped_board 
+ 		START WITH prntno IS NULL 
+ 		CONNECT BY PRIOR no=prntno 
+ 		ORDER SIBLINGS BY grpno desc
+ 		) ssb ) 
+ 		WHERE no=#{no}
 	</select>
 </mapper>

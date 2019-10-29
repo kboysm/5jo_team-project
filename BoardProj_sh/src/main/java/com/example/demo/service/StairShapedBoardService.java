@@ -1,10 +1,8 @@
 package com.example.demo.service;
 
-import java.util.HashMap;
 import java.util.List;
 
-import org.apache.ibatis.annotations.Select;
-
+import com.example.demo.vo.BesideBoardVO;
 import com.example.demo.vo.StairShapedBoardVO;
 
 public interface StairShapedBoardService {
@@ -17,5 +15,7 @@ public interface StairShapedBoardService {
 	int countBoardEq(String category, String search);
 	int countBoardLk(String category, String search);
 	int insertBoard(StairShapedBoardVO board);
-
+	int updateBoard(StairShapedBoardVO board);
+	int deleteBoard(int no);
+	BesideBoardVO besideBoard(int no);
 }

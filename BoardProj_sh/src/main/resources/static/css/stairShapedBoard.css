@@ -1,0 +1,20 @@
+@charset "UTF-8";
+#stairContent {
+	white-space: pre;
+}
+
+.arrowBtn {
+	cursor: pointer;
+}
+
+.pageNum {
+	color: blue;
+}
+
+.thisPageNum {
+	font-weight: bold;
+}
+
+.thisBoardTitle {
+	font-weight: bold;
+}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<div th:fragment="boardListTable">
+		<table>
+			<tr>
+				<td>no</td>
+				<td>writer</td>
+				<td>title</td>
+				<td>regdate</td>
+				<td>hits</td>
+			</tr>
+			<tr th:each="board : ${boardList}">
+				<td><span th:text="${board.no}"></span></td>
+				<td><span th:text="${board.writer}"></span></td>
+				<td><span th:if="${searching==null and board.level>1}"><span
+						th:each="num : ${#numbers.sequence(2,board.level)}"
+						th:if="${board.level>1}">&nbsp&nbsp</span> <img
+						th:src="@{/img/rounded-angle-arrow.png}" width=10 height=10></span>
+					<span class="thisBoardTitle" th:if="${no==board.no}" th:text="${board.title}"></span>
+					<span th:if="${no!=board.no}" style="cursor: pointer;"
+					th:onclick="|javascript:boardHref(${board.no},${paging.nowPage})|"
+					th:text="${board.title}"></span></td>
+				<td><span th:text="${#dates.format(board.regdate, 'yy.MM.dd')}"></span></td>
+				<td><span th:text="${board.hits}"></span></td>
+			</tr>
+		</table>
+		<span th:if="${paging.startPage>1}" class="arrowBtn" id="arrowLeft">< prev</span>
+		<span
+			th:each="page : ${#numbers.sequence(paging.startPage,paging.endPage)}">
+			<span class="thisPageNum" th:if="${paging.nowPage==page}" th:text="${page}"></span> <span
+			class="pageNum" th:unless="${paging.nowPage==page}"
+			style="cursor: pointer;"
+			th:text="${page}"></span>
+		</span> <span th:if="${paging.endPage<paging.totalPage}" class="arrowBtn"
+			id="arrowRight">next ></span>
+	</div>
+</body>
+</html>

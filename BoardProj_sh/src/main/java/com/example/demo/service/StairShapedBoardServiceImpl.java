@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dao.StairShapedBoardMapper;
+import com.example.demo.vo.BesideBoardVO;
 import com.example.demo.vo.StairShapedBoardVO;
 
 @Service("StairShapedBoardService")
@@ -63,6 +64,24 @@ public class StairShapedBoardServiceImpl implements StairShapedBoardService {
 			board.setGrpno(mapper.getPrntGrpno(board.getPrntno()));
 		mapper.insertBoard(board);
 		return mapper.getNoSeq();
+	}
+
+	@Override
+	public int updateBoard(StairShapedBoardVO board) {
+		// TODO Auto-generated method stub
+		return mapper.updateBoard(board);
+	}
+
+	@Override
+	public int deleteBoard(int no) {
+		// TODO Auto-generated method stub
+		return mapper.deleteBoard(no);
+	}
+
+	@Override
+	public BesideBoardVO besideBoard(int no) {
+		// TODO Auto-generated method stub
+		return mapper.besideBoard(no);
 	}
 
 }
