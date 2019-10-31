@@ -5,29 +5,33 @@
 <title>Stair-shaped Board</title>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<style type="text/css">
+#stairFormUpside {
+	margin: 10px;
+}
 
-<script type="text/javascript">
-	function showBoard() {
-		let str = $("#stairContent").text();
-		str = str.replace(/<br\s*\/?>/img, '\r\n'); //엔터 처리
-		$("#stairContent").text(str);
-	}
-	function updateBoard() {
-		let str = $("#stairContent").val();
-		str = str.replace(/(?:\r\n|\r|\n)/g, '<br />'); //엔터 처리
-		$("#stairContent").val(str);
-	}
+#stairFormUpside #writer {
+	margin-right: 10px;
+}
+</style>
+<script type="text/javascript" th:src="@{/js/stairShapedBoardForm.js}">
+	
 </script>
 </head>
 <body>
 	<form id="stairBoardForm" th:action="@{/stairShapedBoardUpdate}"
 		th:object="${board}" onsubmit="updateBoard()" method="post">
-		<input type="hidden" th:field="*{prntno}">
-		<input type="hidden" th:field="*{no}">
-		제목: <input type="text" size="30" th:field="*{title}"><br>
-		글쓴이: <span th:text="*{writer}"></span><br>
-		내용: <textarea id="stairContent" rows="30" cols="100" th:field="*{content}"></textarea>
+		<input type="hidden" th:field="*{prntno}"> <input
+			type="hidden" th:field="*{no}">
+		<div id="stairFormUpside">
+			글쓴이: <span th:text="*{writer}"></span>
+			제목: <input type="text" size="50"
+				th:field="*{title}" required="required"  autofocus="autofocus" pattern=".{1,50}"><br>
+		</div>
+		<textarea id="stairContent" rows="30" cols="100" th:field="*{content}"></textarea>
+			<span id="textCount"></span>
 		<br> <input type="submit" value="수정">
+		<button type="button" onclick="history.back(-1)">취소</button>
 	</form>
 </body>
 </html>

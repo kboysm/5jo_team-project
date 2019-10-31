@@ -10,43 +10,12 @@
 
 </style>
 <script th:inline="javascript" type="text/javascript">
-	$(function() {
-		$(".pageNum").click(pageHref);
-		arrowClickAtr();
-	})
-	
-	function arrowClickAtr(){
-		let startPage=/*[[${paging.startPage}]]*/;
-		let cntPerBlock=/*[[${paging.cntPerBlock}]]*/;
-		$('#arrowLeft').click(function(){pageNumUpdate(startPage-cntPerBlock);});
-		$('#arrowRight').click(function(){pageNumUpdate(startPage+cntPerBlock);});
-	}
-
-	function pageNumUpdate(val){
-		location.href = "/stairShapedBoardList?nowPage=" + val;
-	}
-	
-	function pageHref() {
-		if([[${category!=null}]]){
-			let category= /*[[${category}]]*/;
-			let search= /*[[${search}]]*/;
-			let url= "/stairShapedBoardList?nowPage=" + $(this).text() + "&category=" + category + "&search=" + search;
-			location.href = url;
-		}
-		else
-			location.href = "/stairShapedBoardList?nowPage=" + $(this).text();
-	}
-
-	function boardHref(no, page) {
-		if([[${category!=null}]]){
-			let category= /*[[${category}]]*/;
-			let search= /*[[${search}]]*/;
-			let url= "/stairShapedBoard?no=" + no + "&nowPage=" + page + "&category=" + category + "&search=" + search;
-			location.href = url;
-		}
-		else
-			location.href = "/stairShapedBoard?no=" + no + "&nowPage=" + page;
-	}
+	let startPage=/*[[${paging.startPage}]]*/;
+	let cntPerBlock=/*[[${paging.cntPerBlock}]]*/;
+	let category= /*[[${category}]]*/;
+	let search= /*[[${search}]]*/;
+</script>
+<script type="text/javascript"  th:src="@{/js/stairShapedBoardList.js}">
 </script>
 </head>
 <body>

@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.demo.bean.StairPagingVO;
+import com.example.demo.bean.StairShapedBoardVO;
 import com.example.demo.service.StairShapedBoardService;
-import com.example.demo.vo.PagingVO;
-import com.example.demo.vo.StairShapedBoardVO;
 
 @Controller
 public class StairShapedBoardController {
@@ -26,19 +26,15 @@ public class StairShapedBoardController {
 	@Autowired
 	StairShapedBoardService service;
 
-	@GetMapping("index")
-	public void index() {
-	}
-
 	@GetMapping("stairShapedBoardList")
 	public void stairShapedBoardList(@RequestParam(defaultValue = "1") int nowPage, String category, String search,	Model model) {
-		PagingVO vo;
+		StairPagingVO vo;
 		if (category != null) {
-			vo = new PagingVO(nowPage, service.countBoardLk(category, search));
+			vo = new StairPagingVO(nowPage, service.countBoardLk(category, search));
 			model.addAttribute("boardList", service.getBoardListLk(vo.getStart(), vo.getEnd(), category, search));
 			model.addAttribute("searching", "searching");
 		} else {
-			vo = new PagingVO(nowPage, service.countBoard());
+			vo = new StairPagingVO(nowPage, service.countBoard());
 			model.addAttribute("boardList", service.getBoardList(vo.getStart(), vo.getEnd()));
 		}
 		model.addAttribute("paging", vo);
@@ -50,9 +46,10 @@ public class StairShapedBoardController {
 	
 	@RequestMapping("stairShapedBoard")
 	public void stairShapedBoard(@RequestParam(defaultValue = "1") int nowPage, @RequestParam(defaultValue = "1") int smallNowPage, String category, String search, int no, Model model) {
+		service.increaseHit(no);
 		StairShapedBoardVO board = service.getBoard(no);
 		String grpno=Integer.toString(board.getGrpno());
-		PagingVO vo = new PagingVO(smallNowPage, service.countBoardEq("grpno", grpno));
+		StairPagingVO vo = new StairPagingVO(smallNowPage, service.countBoardEq("grpno", grpno));
 		vo.setCntPerPage(5);
 		vo.pageSetting();
 		model.addAttribute("boardList", service.getBoardListEq(vo.getStart(), vo.getEnd(), "grpno", grpno));
@@ -97,7 +94,7 @@ public class StairShapedBoardController {
 	@GetMapping("stairShapedBoardSmallList")
 	public String stairShapedBoardSmallList(@RequestParam(defaultValue = "1") int nowPage, @RequestParam(defaultValue = "1") int smallNowPage,
 			String grpno, int no, Model model) {
-		PagingVO vo = new PagingVO(smallNowPage, service.countBoardEq("grpno", grpno));
+		StairPagingVO vo = new StairPagingVO(smallNowPage, service.countBoardEq("grpno", grpno));
 		vo.setCntPerPage(5);
 		vo.pageSetting();
 		model.addAttribute("nowPage",nowPage);

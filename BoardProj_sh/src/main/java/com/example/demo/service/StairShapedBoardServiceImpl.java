@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dao.StairShapedBoardMapper;
-import com.example.demo.vo.BesideBoardVO;
-import com.example.demo.vo.StairShapedBoardVO;
+import com.example.demo.bean.BesideBoardVO;
+import com.example.demo.bean.StairShapedBoardVO;
+import com.example.demo.mapper.StairShapedBoardMapper;
 
 @Service("StairShapedBoardService")
 public class StairShapedBoardServiceImpl implements StairShapedBoardService {
@@ -35,8 +35,13 @@ public class StairShapedBoardServiceImpl implements StairShapedBoardService {
 	@Override
 	public StairShapedBoardVO getBoard(int no) {
 		// TODO Auto-generated method stub
-		mapper.increaseHit(no);
 		return mapper.selectBoard(no);
+	}
+	
+	@Override
+	public int increaseHit(int no) {
+		// TODO Auto-generated method stub
+		return mapper.increaseHit(no);
 	}
 
 	@Override
@@ -83,5 +88,6 @@ public class StairShapedBoardServiceImpl implements StairShapedBoardService {
 		// TODO Auto-generated method stub
 		return mapper.besideBoard(no);
 	}
+
 
 }

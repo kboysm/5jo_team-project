@@ -1,6 +1,8 @@
 @charset "UTF-8";
 #stairContent {
-	white-space: pre;
+	white-space: pre-line;
+	min-height: 200px;
+	clear:both;
 }
 
 .arrowBtn {
@@ -15,6 +17,50 @@
 	font-weight: bold;
 }
 
-.thisBoardTitle {
+.thisBoardTitleInList {
 	font-weight: bold;
 }
+.stairBoardInfo{
+	font-size: 15pt;
+	padding-right: 20px;
+}
+#stairBoardInfoDiv{
+	height:50px;
+	line-height:50px;
+	float:right;
+}
+#stairTitle{
+	font-size: 20pt;
+	padding: 0px 20px;
+	border-bottom: 1px solid black;
+	height: 50px;
+	line-height:50px;
+}
+#stairThisBoard{
+	border: 1px solid black;
+	margin: 20px 0px;
+	clear: both;
+}
+#stairContent{
+	font-size: 18pt;
+	padding: 0px 20px;
+}
+#smallListDiv{
+	padding: 0px 20px;
+}
+
+#center{
+	width: 60%;
+	margin-top: 20px;
+	margin-left: 20px;
+}
+
+.stairBoardBtn{
+	
+}
+
+#stairBoardBtnDiv{
+	float:right;
+	margin-bottom: 10px;
+}
+

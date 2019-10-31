@@ -10,123 +10,47 @@
 
 </style>
 <script th:inline="javascript" type="text/javascript">
-	let grpno;
-	let nowPage;
-	let startPage;
-	$(function() {
-		showBoard();
-		nowPage=/*[[${nowPage}]]*/;
-		grpno=/*[[${grpno}]]*/;
-		startPage=/*[[${paging.startPage}]]*/;
-		let smallNowPage=/*[[${smallNowPage}]]*/;
-		getSmallBoardList(smallNowPage);
-		
-		$('#backList').click(backHref);
-		besideClickAtr();
-	});
+let grpno=/*[[${grpno}]]*/;
+let nowPage=/*[[${nowPage}]]*/;
+let startPage=/*[[${paging.startPage}]]*/;
+let smallNowPage=/*[[${smallNowPage}]]*/;
+let cntPerBlock=/*[[${paging.cntPerBlock}]]*/;
+let category= /*[[${category}]]*/;
+let search= /*[[${search}]]*/;
+let no=/*[[${thisBoard.no}]]*/;
+</script>
+<script type="text/javascript" th:src="@{/js/stairShapedBoard.js}">
 	
-	function besideClickAtr(){
-		let smallNowPage=/*[[${smallNowPage}]]*/;
-		
-		$('.beside').click(function(){
-			console.log($(this).val());
-			boardHref($(this).val(), smallNowPage);
-		});
-	}
-	
-	function arrowClickAtr(){
-		let cntPerBlock=/*[[${paging.cntPerBlock}]]*/;
-		
-		$('#arrowLeft').click(function(){
-			startPage-=cntPerBlock;
-			pageNumUpdate(startPage);
-		});
-		$('#arrowRight').click(function(){
-			startPage+=cntPerBlock;
-			pageNumUpdate(startPage);
-		});
-	}
-	
-	function pageNumUpdate(val){
-		getSmallBoardList(val);
-	}
-	
-	function backHref() {
-		if([[${category!=null}]]){
-			let category= /*[[${category}]]*/;
-			let search= /*[[${search}]]*/;
-			let url= "/stairShapedBoardList?nowPage=" + nowPage + "&category=" + category + "&search=" + search;
-			location.href = url;
-		}
-		else
-			location.href = "/stairShapedBoardList?nowPage=" + nowPage;
-	}
-
-	function boardHref(no, smallNowPage) {
-		if([[${category!=null}]]){
-			let category= /*[[${category}]]*/;
-			let search= /*[[${search}]]*/;
-			let url= "/stairShapedBoard?no=" + no + "&nowPage=" + nowPage + "&category=" + category + "&search=" + search + "&smallNowPage="+smallNowPage;
-			location.href = url;
-		}
-		else
-			location.href = "/stairShapedBoard?no=" + no + "&nowPage=" + nowPage + "&smallNowPage="+smallNowPage;
-	}
-
-	function showBoard() {
-		let str = $("#stairContent").text();
-		str = str.replace(/<br\s*\/?>/img, '\r\n'); //엔터 처리
-		$("#stairContent").text(str);
-	}
-	
-	function deleteBoard(no){
-		if(confirm("삭제하시겠습니까?"))
-			location.href = "/stairShapedBoardDelete?no="+no;
-	}
-	
-	
-	function getSmallBoardList(smallNowPage){
-		$.ajax({
-			url:'stairShapedBoardSmallList',
-			type:'get',
-			data:{'nowPage':nowPage,'smallNowPage':smallNowPage,'grpno':grpno,'no':/*[[${thisBoard.no}]]*/},
-			success:function(data){
-				$('#smallListDiv').html(data);
-				$('.pageNum').click(function(){getSmallBoardList($(this).text())});
-				arrowClickAtr();
-			},
-			error:function(error){
-				alert("error "+error.name);
-			}
-		});
-	}
 </script>
 </head>
 <body>
 	<input type="hidden" name="nowPage" th:value="${nowPage}">
 	<input type="hidden" name="category" th:value="${category}">
 	<input type="hidden" name="search" th:value="${search}">
-	<a th:href="@{/stairShapedBoardUpdateForm(no=${thisBoard.no})}"><button
-			type="button">수정</button></a>
-	<button type="button"
+	<section id="center">
+	<div id="stairBoardBtnDiv">
+	<a th:href="@{/stairShapedBoardUpdateForm(no=${thisBoard.no})}">
+	<button class="stairBoardBtn" type="button">수정</button></a>
+	<button class="stairBoardBtn" type="button"
 		th:onclick="|javascript:deleteBoard(${thisBoard.no})|">삭제</button>
-	<div th:object="${thisBoard}">
-		<div th:text="*{title}"></div>
-		<div>
-			<span th:text="*{writer}"></span><span th:text="*{hits}"></span> <span
-				th:text="*{#dates.format(regdate,'yy.MM.dd hh:mm')}"></span>
+	</div>
+	<div id="stairThisBoard" th:object="${thisBoard}">
+		<div id="stairTitle" th:text="*{title}"></div>
+		<div id="stairBoardInfoDiv">
+			<span class="stairBoardInfo" id="writer" th:text="|글쓴이 *{writer}|"></span>
+			<span class="stairBoardInfo" id="hits" th:text="|조회수 *{hits}|"></span> 
+			<span class="stairBoardInfo" id="date" th:text="|작성일 *{#dates.format(regdate,'yy.MM.dd hh:mm')}|"></span>
 		</div>
-		<p id="stairContent" th:text="*{content}"></p>
+		<p id="stairContent" th:text="*{content}" ></p>
 	</div>
 	<br>
-	<br>
-	<div id="ll"></div>
 	<div id="smallListDiv"></div>
 	<br>
-	<a th:href="@{/stairShapedBoardInsertForm(prntno=${thisBoard.no})}"><button
-			type="button">답글 작성</button></a>
+	<a th:href="@{/stairShapedBoardInsertForm(prntno=${thisBoard.no})}">
+	<button type="button">답글 작성</button></a>
 	<button type="button" th:if="${beside.upNo!=-1}" class="beside" th:value="${beside.upNo}">윗글</button>
 	<button type="button" th:if="${beside.downNo!=-1}" class="beside" th:value="${beside.downNo}">아랫글</button>
 	<span id="backList" style="cursor: pointer;">게시글 목록</span>
+	</section>
 </body>
 </html>

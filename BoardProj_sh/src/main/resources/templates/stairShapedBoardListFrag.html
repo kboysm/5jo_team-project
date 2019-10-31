@@ -21,7 +21,7 @@
 						th:each="num : ${#numbers.sequence(2,board.level)}"
 						th:if="${board.level>1}">&nbsp&nbsp</span> <img
 						th:src="@{/img/rounded-angle-arrow.png}" width=10 height=10></span>
-					<span class="thisBoardTitle" th:if="${no==board.no}" th:text="${board.title}"></span>
+					<span class="thisBoardTitleInList" th:if="${no==board.no}" th:text="${board.title}"></span>
 					<span th:if="${no!=board.no}" style="cursor: pointer;"
 					th:onclick="|javascript:boardHref(${board.no},${paging.nowPage})|"
 					th:text="${board.title}"></span></td>
