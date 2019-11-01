@@ -1,8 +1,14 @@
 /**
  * 
  */
+let nowPage;
+let category;
+let search;
 
 $(function() {
+	nowPage=$('#nowPage').val();
+	category=$('#category').val();
+	search=$('#search').val();
 	showBoard();
 	getSmallBoardList(smallNowPage);
 	$('#backList').click(backHref);
@@ -11,19 +17,19 @@ $(function() {
 
 function besideClickAtr() {
 	$('.beside').click(function() {
-		console.log($(this).val());
-		boardHref($(this).val(), smallNowPage);
+		boardHref($(this).val(), 1);
 	});
+	
 }
 
 function arrowClickAtr() {
+	let startPage=parseInt($('#startPage').val());
+	let cntPerBlock=parseInt($('#cntPerBlock').val());
 	$('#arrowLeft').click(function() {
-		startPage -= cntPerBlock;
-		pageNumUpdate(startPage);
+		pageNumUpdate(startPage-cntPerBlock);
 	});
 	$('#arrowRight').click(function() {
-		startPage += cntPerBlock;
-		pageNumUpdate(startPage);
+		pageNumUpdate(startPage+cntPerBlock);
 	});
 }
 
@@ -32,7 +38,7 @@ function pageNumUpdate(val) {
 }
 
 function backHref() {
-	if (category != null) {
+	if (category != null && category.length!=0) {
 		let url = "/stairShapedBoardList?nowPage=" + nowPage + "&category="
 				+ category + "&search=" + search;
 		location.href = url;
@@ -40,15 +46,15 @@ function backHref() {
 		location.href = "/stairShapedBoardList?nowPage=" + nowPage;
 }
 
-function boardHref(no, smallNowPage) {
-	if (category != null) {
+function boardHref(no, smallNowPage2) {
+	if (category != null && category.length!=0) {
 		let url = "/stairShapedBoard?no=" + no + "&nowPage=" + nowPage
 				+ "&category=" + category + "&search=" + search
-				+ "&smallNowPage=" + smallNowPage;
+				+ "&smallNowPage=" + smallNowPage2;
 		location.href = url;
 	} else
 		location.href = "/stairShapedBoard?no=" + no + "&nowPage=" + nowPage
-				+ "&smallNowPage=" + smallNowPage;
+				+ "&smallNowPage=" + smallNowPage2;
 }
 
 function showBoard() {
@@ -62,13 +68,13 @@ function deleteBoard(no) {
 		location.href = "/stairShapedBoardDelete?no=" + no;
 }
 
-function getSmallBoardList(smallNowPage) {
+function getSmallBoardList(smallNowPage2) {
 	$.ajax({
 		url : 'stairShapedBoardSmallList',
 		type : 'get',
 		data : {
 			'nowPage' : nowPage,
-			'smallNowPage' : smallNowPage,
+			'smallNowPage' : smallNowPage2,
 			'grpno' : grpno,
 			'no' : no
 		},

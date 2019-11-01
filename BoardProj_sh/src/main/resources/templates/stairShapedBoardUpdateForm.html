@@ -1,37 +1,53 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Stair-shaped Board</title>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" th:href="@{/css/stairShapedBoard.css}">
 <style type="text/css">
-#stairFormUpside {
-	margin: 10px;
-}
 
-#stairFormUpside #writer {
-	margin-right: 10px;
-}
 </style>
 <script type="text/javascript" th:src="@{/js/stairShapedBoardForm.js}">
 	
 </script>
 </head>
 <body>
+<div class="container">
+<div class="jumbotron" style="padding: 10px; text-align: center;">
+  	<img th:src="@{/img/crazyArcadePng2.png}" width=100>
+    <h1 style="display:inline; vertical-align:middle" >크레이지 아케이드 Q&A</h1> 
+	<img th:src="@{/img/crazyArcadePng.png}" width=100>
+  	<div>게시글 수정</div>
+    </div>
 	<form id="stairBoardForm" th:action="@{/stairShapedBoardUpdate}"
 		th:object="${board}" onsubmit="updateBoard()" method="post">
-		<input type="hidden" th:field="*{prntno}"> <input
-			type="hidden" th:field="*{no}">
-		<div id="stairFormUpside">
-			글쓴이: <span th:text="*{writer}"></span>
-			제목: <input type="text" size="50"
-				th:field="*{title}" required="required"  autofocus="autofocus" pattern=".{1,50}"><br>
+		<input type="hidden" th:field="*{prntno}">
+		<input type="hidden" th:field="*{no}">
+		<div class="form-row">
+			<div class="form-group col-md-4">
+				<label for="writer" class="">글쓴이</label>
+				<span class="form-control" th:text="*{writer}"></span>
+			</div>
+			<div class="form-group col-md-8">
+				<label for="writer">제목</label>
+				<input type="text" class="form-control" th:field="*{title}" required="required" autofocus="autofocus" pattern=".{1,50}"><br>
+			</div>
 		</div>
-		<textarea id="stairContent" rows="30" cols="100" th:field="*{content}"></textarea>
-			<span id="textCount"></span>
-		<br> <input type="submit" value="수정">
-		<button type="button" onclick="history.back(-1)">취소</button>
+		<div class="form-group">
+			<label for="stairContent">내용</label>
+			<textarea class="form-control" id="stairContent" rows="20" th:field="*{content}"></textarea>
+		</div>
+		<span id="textCount"></span>
+		<br><br>
+		<div class="text-center mb-5">
+			<button type="submit" class="btn btn-primary" >수정</button>
+			<button type="button" class="btn btn-primary" onclick="history.back(-1)">취소</button>
+		</div>
 	</form>
+	</div>
 </body>
 </html>

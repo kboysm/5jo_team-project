@@ -1,17 +1,24 @@
 /**
  * 
  */
+let category;
+let search;
+
 $(function() {
+	category=$('#category').val();
+	search=$('#search').val();
 	$(".pageNum").click(pageHref);
 	arrowClickAtr();
 })
 
 function arrowClickAtr() {
+	let startPage=parseInt($('#startPage').val());
+	let cntPerBlock=parseInt($('#cntPerBlock').val());
 	$('#arrowLeft').click(function() {
-		pageNumUpdate(startPage - cntPerBlock);
+		pageNumUpdate(startPage-cntPerBlock);
 	});
 	$('#arrowRight').click(function() {
-		pageNumUpdate(startPage + cntPerBlock);
+		pageNumUpdate(startPage+cntPerBlock);
 	});
 }
 
@@ -20,7 +27,7 @@ function pageNumUpdate(val) {
 }
 
 function pageHref() {
-	if (category != null) {
+	if (category != null && category.length!=0) {
 		let url = "/stairShapedBoardList?nowPage=" + $(this).text()
 				+ "&category=" + category + "&search=" + search;
 		location.href = url;
@@ -29,7 +36,7 @@ function pageHref() {
 }
 
 function boardHref(no, page) {
-	if (category != null) {
+	if (category != null && category.length!=0) {
 		let url = "/stairShapedBoard?no=" + no + "&nowPage=" + page
 				+ "&category=" + category + "&search=" + search;
 		location.href = url;

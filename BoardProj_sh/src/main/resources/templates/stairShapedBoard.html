@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Stair-shaped Board</title>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <link rel="stylesheet" th:href="@{/css/stairShapedBoard.css}">
 <style type="text/css" >
 
 </style>
 <script th:inline="javascript" type="text/javascript">
 let grpno=/*[[${grpno}]]*/;
-let nowPage=/*[[${nowPage}]]*/;
-let startPage=/*[[${paging.startPage}]]*/;
 let smallNowPage=/*[[${smallNowPage}]]*/;
-let cntPerBlock=/*[[${paging.cntPerBlock}]]*/;
-let category= /*[[${category}]]*/;
-let search= /*[[${search}]]*/;
 let no=/*[[${thisBoard.no}]]*/;
 </script>
 <script type="text/javascript" th:src="@{/js/stairShapedBoard.js}">
@@ -24,33 +21,43 @@ let no=/*[[${thisBoard.no}]]*/;
 </script>
 </head>
 <body>
-	<input type="hidden" name="nowPage" th:value="${nowPage}">
-	<input type="hidden" name="category" th:value="${category}">
-	<input type="hidden" name="search" th:value="${search}">
+<div class="container">
+<div class="jumbotron" style="padding: 10px; text-align: center;">
+<img th:src="@{/img/crazyArcadePng2.png}" width=100>
+    <h1 style="display:inline; vertical-align:middle" >크레이지 아케이드 Q&A</h1> 
+	<img th:src="@{/img/crazyArcadePng.png}" width=100>
+    </div>
+	<input type="hidden" id="nowPage" th:value="${nowPage}">
+	<input type="hidden" id="category" th:value="${category}">
+	<input type="hidden" id="search" th:value="${search}">
 	<section id="center">
-	<div id="stairBoardBtnDiv">
-	<a th:href="@{/stairShapedBoardUpdateForm(no=${thisBoard.no})}">
-	<button class="stairBoardBtn" type="button">수정</button></a>
-	<button class="stairBoardBtn" type="button"
-		th:onclick="|javascript:deleteBoard(${thisBoard.no})|">삭제</button>
+	<div class="stairBoardRBtnDiv mb-3">
+		<a th:href="@{/stairShapedBoardUpdateForm(no=${thisBoard.no})}">
+		<button class="btn btn-dark" type="button">수정</button></a>
+		<button class="btn btn-dark" type="button" th:onclick="|javascript:deleteBoard(${thisBoard.no})|">삭제</button>
 	</div>
-	<div id="stairThisBoard" th:object="${thisBoard}">
-		<div id="stairTitle" th:text="*{title}"></div>
-		<div id="stairBoardInfoDiv">
-			<span class="stairBoardInfo" id="writer" th:text="|글쓴이 *{writer}|"></span>
-			<span class="stairBoardInfo" id="hits" th:text="|조회수 *{hits}|"></span> 
-			<span class="stairBoardInfo" id="date" th:text="|작성일 *{#dates.format(regdate,'yy.MM.dd hh:mm')}|"></span>
+	<div class="border mt-5" id="stairThisBoard" th:object="${thisBoard}">
+		<div class="p-3 border-bottom h4" th:text="*{title}"></div>
+		<div class="text-right p-2">
+			<span class="text-primary pr-3" id="writer" th:text="|*{writer}|"></span>
+			<span class="pr-3" id="hits" th:text="|조회수 *{hits}|"></span> 
+			<span class="pr-3" id="date" th:text="|*{#dates.format(regdate,'yy.MM.dd hh:mm')}|"></span>
 		</div>
-		<p id="stairContent" th:text="*{content}" ></p>
+		<p class="pl-5" id="stairContent" th:text="*{content}" ></p>
 	</div>
 	<br>
 	<div id="smallListDiv"></div>
 	<br>
+	<div class="mb-3">
 	<a th:href="@{/stairShapedBoardInsertForm(prntno=${thisBoard.no})}">
-	<button type="button">답글 작성</button></a>
-	<button type="button" th:if="${beside.upNo!=-1}" class="beside" th:value="${beside.upNo}">윗글</button>
-	<button type="button" th:if="${beside.downNo!=-1}" class="beside" th:value="${beside.downNo}">아랫글</button>
-	<span id="backList" style="cursor: pointer;">게시글 목록</span>
+	<button type="button" class="btn btn-dark">답글 작성</button></a>
+	<span class="stairBoardRBtnDiv">
+		<button type="button" th:if="${beside.upNo!=-1}" class="beside btn btn-dark" th:value="${beside.upNo}">윗글</button>
+		<button type="button" th:if="${beside.downNo!=-1}" class="beside btn btn-dark" th:value="${beside.downNo}">아랫글</button>
+		<button type="button" class="btn btn-dark" id="backList">게시글 목록</button>
+	</span>
+	</div>
 	</section>
+</div>
 </body>
 </html>
