@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Bootstrap -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<meta charset="UTF-8">
+
+<title>CrazyAcade - 패치파일</title>
+</head>
+
+<body>
+<div class="container">
+
+<div class="jumbotron" style="padding: 10px; text-align: center;">
+	<h1><a th:href="@{/fileBoard/list}" style="text-decoration: none;">CrazyAcade - 자료실</a></h1>
+</div>
+
+<div>
+	<div class="container">
+		<h4 style="font-weight: bolder;">상세내용</h4>
+		<br/>
+		<form role="form" th:object=${fileBoardVO} th:action="@{/fileBoard/list}" method="post">
+			<div class="form-group">
+				<label style="font-weight: bolder;">제목</label>
+				<p th:text="${detail.title}" class="form-control"></p>
+				<input type="hidden" class="form-control" th:field="${detail.title}">
+			</div>	
+			<div class="form-group">
+				<label style="font-weight: bolder;">작성자</label>
+				<p th:text="${detail.writer}" class="form-control"></p>
+				<input type="hidden" class="form-control" th:field="${detail.writer}">
+			</div>	
+			<div class="form-group">
+				<label style="font-weight: bolder;">작성일자</label>
+				<p class="form-control" th:text="${detail.reg_date}"></p>
+			</div>	
+			<div class="form-group">
+				<label for="" style="font-weight: bolder;">내용</label>
+				<p th:text="${detail.content}" class="form-control" style="height: 200px;"></p>
+				<input type="hidden" class="form-control" th:field="${detail.content}">
+			</div>
+			<div class="form-group">               
+				<label style="font-weight: bolder;">첨부파일</label>
+				<p><a th:href="@{/fileBoard/fileDown/{bno}(bno=${files.b_no})}" class="form-control">[[${files.fileoriginname}]]</a></p>
+				<!--/* 잘 찍히나 확인 => <br>[[${files.b_no}]] */-->
+			</div>	
+			<div style="text-align: right;">
+				<input type="submit" class="btn btn-dark" th:value="목록" th:formaction="@{/fileBoard/list}">
+				<input type="submit" class="btn btn-info" th:value="수정" th:formaction="@{/fileBoard/update/{bno}(bno=${detail.b_no})}">
+				<input type="submit" class="btn btn-danger" th:value="삭제" th:formaction="@{/fileBoard/delete/{bno}(bno=${detail.b_no})}">
+			</div>
+		</form>
+	</div>
+	
+	<br/><br/>
+	
+	<!-- /* 댓글 */ -->
+	<div class="container">
+		<label for="content" style="font-weight: bolder;">댓글</label>
+		<form name="commentInsertForm" >
+			<div>
+				<input type="hidden" class="form-control" id="b_no" name="b_no" value="${detail.b_no}">
+				<input type="text" class="form-control" id="content" name="content" placeholder="댓글 내용을 입력하세요.">
+			</div>
+			<div style="text-align: right; padding: 17px 0;">
+				<button type="button" class="btn btn-info" name="commentInsertBtn">등록</button>
+			</div>
+		</form>
+	</div>
+<br/><br/>	
+	<div>
+		<div></div>
+	</div>
+</div>
+
+<script>
+
+/* 게시글 번호 */
+var b_no = '[[${detail.b_no}]]';
+
+var b_no = Number(b_no);
+
+$('[name=commentInsertBtn]').click(function(){ //댓글 등록버튼 클릭시
+	var insertData = $('[name=commentInsertForm]').serialize(); //form 내용 가져옴
+	commentInsert(insertData); //insert함수 실행
+});
+
+function commentList(){
+	$.ajax({
+		url : 'http://localhost:8080/comment/list',
+		type : 'get',
+		data : {'b_no' : b_no},
+		success : function(data){
+			var a = '';
+			$.each(data, function(key, value){
+				a += '<div class="commentArea" style="border-bottom:1px solid darkgray; margin-bottom: 15px;">';
+				a += '<div class="commentInfo' + value.c_no + '">' + '댓글번호 : ' + value.c_no + ' / 작성자 : ' + value.writer;
+				a += '<a onclick="commentUpdate(' + value.c_no + ', /' + value.content + '/);"> 수정 </a>';
+				a += '<a onclick="commentDelete(' + value.c_no + ');"> 삭제 </a> </div>';
+				a += '<div class="commentContent' + value.c_no +'"> <p> 내용 : ' + value.content + '</p>';
+				a += '</div></div>';
+			});
+			$(".commentList").html(a);
+		}
+	});
+}
+
+/* 댓글등록 */
+function commentInsert(insertData){
+	$.ajax({
+		url : '../../comment/insert',
+		type : 'post',
+		data : insertData,
+		success : function(data){
+			if(data == 1){
+				commentList();
+				$('[name=content]').val('');
+			}
+		}
+	});
+}
+
+
+/* 댓글수정 */
+function commentUpdate(cno, content){
+	var a = '';
+	
+	a += '<div>';
+	a += '<input type="text" name="content_"' + c_no + '" value="' + content + '"/>';
+	a += '<span><input type="button" value="수정" onclick="commentUpdateProc(' + c_no + ');"></span>';
+	a += '</div>';
+	
+	$('.commentContent' + c_no).html(a);
+
+}
+
+function commentUpdateProc(c_no){
+	var updateContent = $('[name=content_]' + c_no + ']').val();
+	
+	$.ajax({
+		url : 'http://localhost:8080/comment/update',
+		type : 'post',
+		data : {'content' : updateContent, 'c_no' : c_no},
+		success : function(data){
+			if(data == 1) commentList(b_no);
+		}
+	});
+}
+
+
+/* 댓글삭제 */
+function commentDelete(c_no){
+	$.ajax({
+		url : 'http://localhost:8080/comment/delete/' + c_no,
+		type : 'post',
+		success : function(data){
+			if(data == 1) commentList(b_no);
+		}
+	});
+}
+
+$(document).ready(function(){
+	commentList();
+});
+
+</script>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTDMapper3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.PagingMapper">
+<select id="boardCount" resultType="int">
+		select count(*) from gallery_board
+	</select>
+	<!-- test(페이징 처리 테스트하기) -->
+	<select id="testlist" resultType="GalleryBoardVo">
+		select * from (select rownum rnum, A.* from(select no,title,writer,content,regdate,count from gallery_board order by no desc)A) where <![CDATA[rnum>=#{pagenum} and rnum <=#{contentnum}]]>
+	</select>
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.ListBoardMapper">
+
+	<!-- 게시물 갯수 -->
+	<select id="conuntContent" resultType="int">
+		SELECT COUNT(*) FROM
+		List_Board
+	</select>
+	<!-- 조회수 -->
+	<update id="countView">
+		UPDATE List_Board SET view_cnt = view_cnt + 1 WHERE
+		idx = #{idx}
+	</update>
+	<!-- 게시글 목록 -->
+	<select id="viewList" resultType="ListBoardVO">
+		SELECT * FROM List_Board ORDER
+		BY idx DESC ,reg_date DESC
+	</select>
+	<!-- 게시글 상세 -->
+	<select id="viewContent" parameterType="int"
+		resultType="ListBoardVO">
+		SELECT * FROM List_Board WHERE idx = #{idx}
+	</select>
+
+	<!-- 게시글 작성 -->
+	<insert id="insert" parameterType="ListBoardVO">
+		INSERT INTO
+		List_Board
+		(idx,title,writer,content,reg_date,view_cnt) VALUES
+		(List_Board_seq.nextval,#{title},#{writer},#{content},default,#{view_cnt})
+	</insert>
+
+	<!-- 게시글 수정 -->
+	<update id="update" parameterType="ListBoardVO">
+		UPDATE List_Board SET title = #{title}, content = #{content}, reg_date =
+		default
+		WHERE idx = #{idx}
+	</update>
+
+	<!-- 게시글 삭제 -->
+	<delete id="delete" parameterType="int">
+		DELETE FROM List_Board WHERE
+		IDX = #{idx}
+	</delete>
+
+	<!-- 게시글 검색 -->
+	<select id="findByTitle" parameterType="String" resultType="ListBoardVO">
+		SELECT * FROM List_Board WHERE title LIKE '%' || #{title} || '%' ORDER BY idx DESC
+	</select>
+	<select id="findByWriter" parameterType="String" resultType="ListBoardVO">
+		SELECT * FROM List_Board WHERE writer LIKE '%' || #{writer} || '%' ORDER BY idx DESC
+	</select>
+	
+
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.example.demo.mapper.smMemberMapper">
+    <insert id="sminsertBoard" parameterType="com.example.demo.bean.smBoardVO">
+       INSERT INTO List_Board (idx,title,writer,content) VALUES
+		(List_Board_seq.nextval,#{title},#{writer},#{content})
+    </insert>
+    
+    <update id="smupdateBoard" parameterType="com.example.demo.bean.smBoardVO">
+         UPDATE List_Board SET title = #{title},writer=#{writer},content=#{content},view_cnt=#{view_cnt} WHERE idx =#{idx}
+    </update>
+    
+    <delete id="smdeleteBoard" parameterType="int">
+        DELETE FROM List_Board WHERE idx = #{idx}
+    </delete>
+    
+    <select id="smselectBoard" parameterType="int" resultType="com.example.demo.bean.smBoardVO">
+        SELECT * FROM List_Board WHERE idx = #{idx}
+    </select>
+    
+    
+</mapper>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<title>Insert title here</title>
+</head>
+<body>
+<div class="container">
+
+  <div class="jumbotron">
+    <h1>선택하신 게시글</h1>      
+    <p>욕설 및 비방 금지!</p>
+  </div>
+
+<p class="text-primary">게시글 번호 : <th:block th:text="${board.idx}"></th:block></p><br>
+<p class="text-primary">게시글 작성일 : <th:block th:text="${#dates.format(board.reg_date, 'yyyy/MM/dd HH시:mm분')}"></th:block><br></p><br>
+<p class="text-primary">조회수 : <th:block th:text="${board.view_cnt}"></th:block></p>
+
+
+
+<form action="#" th:action="@{/sm/update}" th:object="${board}" class="form">
+<div class="form-group"> 
+			<input type="hidden" th:field="*{idx}" name="idx" class="form-control"><br>
+게시글 제목 :	<input type="text" th:field="*{title}" name="title" required="required" class="form-control"><br>
+게시글 작성자 :	<input type="text" th:field="*{writer}" name="writer" required="required" class="form-control"><br>
+게시글 내용 :	<input type="text" th:field="*{content}" name="content" required="required" style="width: 700px; height: 100px; overflow: scroll;" class="form-control"><br>
+</div>
+	<input type="submit" value="수정하기" class="btn btn-primary">
+</form>
+
+<form th:action="@{/sm/delete}">
+	<input type="hidden" th:value="${board.idx}" name="idx"><br>
+	<input type="submit" value="삭제하기" class="btn btn-primary">
+<button class="btn btn-primary"><a th:href="@{/sm/test}" style="color: white;">게시판 목록</a></button>
+</form>
+<br>
+ </div>
+
+
+
+
+
+
+</div>
+</body>
+</html>

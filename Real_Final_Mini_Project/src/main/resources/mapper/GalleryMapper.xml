@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTDMapper3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.GalleryBoardMapper">
+	<!-- Board 관련 -->
+	<select id="boardCount" resultType="int">
+		select count(*) from gallery_board
+	</select>
+	<!-- test(페이징 처리) -->
+	<select id="testlist">
+		select * from (select rownum rnum, A.* from(select no,title,writer,content,regdate,count from gallery_board order by no desc)A) where <![CDATA[rnum>#{pagenum} and rnum <=#{contentnum}]]>
+	</select>
+	<!-- test(페이징 처리) -->
+	
+	
+	<select id="selectAll" resultType="GalleryBoardVO" parameterType="int">
+		select no,title,writer,content,regdate,count from gallery_board order by no desc
+	</select>
+	<select id="boardDetail" parameterType="int" resultType="GalleryBoardVO">
+        SELECT no,title,writer,content,regdate,count from gallery_board WHERE no = #{no}
+    </select>
+	<insert id="insertGalleryBoard" parameterType="GalleryBoardVO">
+		<selectKey keyProperty="no" resultType="int" order="BEFORE">
+			select BoardId_seq.NEXTVAL FROM DUAL
+		</selectKey>
+		insert into gallery_board(no,title,writer,content) VALUES(#{no},#{title},#{writer},#{content})
+	</insert>
+	<update id="upadateGalleryBoard" parameterType="GalleryBoardVO">
+		update gallery_board set title=#{title}, content=#{content} where no=#{no}
+	</update>
+	<delete id="boardDelete" parameterType="int">
+        DELETE FROM gallery_board WHERE no = #{no}
+    </delete>
+	
+	<!-- file 출력 및 삽입 test -->
+	<select id="fileView" parameterType="int" resultType="FileVO">
+		SELECT*FROM gallery_files WHERE no = #{no}
+	</select>
+	<insert id="fileInsert" parameterType="FileVO">
+		insert into gallery_files(fno,no,fileName,fileOriName,fileUrl) values(fno_seq.NEXTVAL,#{no},#{fileName},#{fileOriName},#{fileUrl})
+	</insert>
+	<!-- image List(print는 paging처리 안된 구문) -->
+	<select id="imagePrint" parameterType="int" resultType="BoardFileVO">
+	select B.no,writer,title,filename,fileoriname,fileurl from gallery_board B, gallery_files F where B.no = F.no order by B.no desc
+	</select>
+	<select id="imagePaging" parameterType="int" resultType="BoardFileVO">
+	select * from (select rownum rnum, B.*from(select B.no,title,writer,filename,fileoriname,fileurl from gallery_board B, gallery_files F where B.no = F.no order by B.no desc)B)where  <![CDATA[rnum>=#{pagenum} and rnum <=#{contentnum}]]>
+	</select>
+	<!-- 조회수 늘리기 -->
+	<update id="increaseCount" parameterType="int">
+		UPDATE gallery_board SET count=count+1 WHERE no=#{no}
+	</update>
+</mapper>

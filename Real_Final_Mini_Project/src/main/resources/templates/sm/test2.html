@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <meta charset="UTF-8">
+    <title>게시판</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container-fluid" style="margin: 10px;">
+<form th:action="@{/sm/search}" class="form-inline">
+<div class="form-group">
+	<select name="option" class="form-control">
+		<option th:value="제목" >제목</option>
+		<option th:value="글쓴이" >글쓴이</option>
+	</select>
+	<input type="text" name="search" class="form-control">
+	</div>
+	<input type="submit" value="검색" class="btn btn-primary">
+</form>
+
+</div>
+    <h2 th:align="center">스프링 부트 게시판</h2>
+	<div class="container-fluid">
+<table class="table table-bordered" th:align="center" border="1" th:cellpadding="0" th:cellspacing="0" th:width="700">
+   <thead class="thead-dark" style="text-align: center;">
+    <tr>
+        <th>게시글 번호</th>
+        <th>제목</th>
+        <th>글쓴이</th>
+        <th>생성 날짜</th>
+        <th>조회수</th>
+    </tr></thead>
+    <tbody>
+    <tr th:each="board : ${list}">
+        <td th:text="${board.idx}" th:align="center" ></td>
+        <td><a th:href="@{/sm/boardView(idx=${board.idx})}"
+		th:text="${board.title}"></a>
+		</td>
+        <td th:text="${board.writer}" th:align="center"></td>
+        <td th:text="${#dates.format(board.reg_date, 'yyyy/MM/dd HH시:mm분')}" th:align="center"></td>
+        <td th:text="${board.view_cnt}" th:align="center" ></td>
+    </tr></tbody>
+	<tfoot>
+		<tr style="text-align: center;">
+			<td colspan="5">
+			<th:block th:if="${page.isPrev() == true}">
+				<a style="text-decoration:none;" th:href="@{/sm/test2(pagenum=${page.getStartPage()-1},key=${key},search=${search})}"
+				>
+				&laquo;
+				</a>
+			</th:block>
+			<th:block th:each="i : ${#numbers.sequence(page.getStartPage(),page.getEndPage())}">
+				<a style="text-decoration: none;" th:href="@{/sm/test2(pagenum=${i},key=${key},search=${search})}" th:text="${i}"></a>
+			</th:block>		
+			
+			<th:block th:if="${page.isNext() == true}">
+				<a style="text-decoration:none;" th:href="@{/sm/test2(pagenum=${page.getEndPage()+1},key=${key},search=${search})}">
+					&raquo;
+				</a>
+			</th:block>
+		</td>
+		</tr>
+	</tfoot>
+	
+</table><br><br>
+<button class="btn btn-primary"><a th:href="@{/sm/create}" style="color: white;">글쓰기</a></button>
+<button class="btn btn-primary"><a th:href="@{/sm/test}" style="color: white;">전체 게시글 보기</a></button>
+<button class="btn btn-primary"><a th:href="@{/index}" style="color: white;">전체 게시판 목록 보기</a></button>
+
+
+<!--<div  style="text-align: center; ">
+<a th:href="@{test1?page=1}">1</a>
+<a th:href="@{test1?page=2}">2</a>
+<a th:href="@{test1?page=3}">3</a>
+<a th:href="@{test1?page=4}">4</a>
+<a th:href="@{test1?page=5}">5</a>
+</div>-->
+
+
+
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<meta charset="UTF-8">
+<style type="text/css">
+img {
+	width: 200px;
+	height: 160px;
+}
+
+#block {
+	width: 1100px;
+	height: 400px;
+	margin: 0 auto;
+}
+
+#inline {
+	display: inline-block;
+}
+#total{
+	position:absolute;
+	left: 1%;
+	text-align: center;
+}
+.card {
+	border: 1px solid red;
+}
+.pagination>.disabled>a{
+	pointer-events: none;
+}
+#paging-bottom{
+	margin: 20px;
+	bottom: 0;
+}
+.row{
+	text-align: center;
+}
+#paging{
+	width: 1100px;
+	margin: 0 auto;
+}
+.pagination{
+	margin: 0 40%;
+}
+#contentnum{
+	height: 30px;
+}
+</style>
+<script type="text/javascript">
+function boardHref(no){
+	location.href="/galleryBoardDetail?no="+no;
+}
+</script>
+<link th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"
+	rel="stylesheet" />
+<link th:href="@{/css/style.css}" rel="stylesheet" />
+<title>Paging TEST</title>
+</head>
+<body>
+<div class="container">
+	<div class="jumbotron" style="padding: 10px; text-align: center;">
+		<h1>Crazy Arcade Gallery Board</h1>
+		<p>제목을 누르면 상세페이지로 이동합니다 ^^</p>
+	</div>
+	<div>
+	<h5 th:text="${total}"></h5>
+	<form th:action="@{/searchImg}" method="get" class="form-inline">
+	<select name="option" id="contentnum">
+			<option th:value="제목">제목</option>
+			<option th:value="글쓴이">글쓴이</option>
+	</select>
+		<input type="text" name="search">
+		<input class="btn btn-dark btn-sm" type="submit" value="검색">		
+	</form>
+	
+	</div>
+	<br>
+	<div id="total">
+		<div class="row">
+		<div id="block">
+			<div id="inline" th:each="data:${imagetest}">
+				<img alt="test" th:src="@{${data.fileurl}+${data.filename}}">
+				<br> <div id="title" th:text="${data.title}" th:onclick="|javascript:boardHref('${data.no}')|" style="cursor: pointer;"></div>
+			</div>
+		</div>
+		<br>
+		<div id="paging">
+			<ul class="pagination">
+			<li class="page-item" th:classappend="${page.isPrev()!=true}?'disabled'">
+				<a class="page-link" style="text-decoration: none;" th:href="@{/galleryBoardImage(pagenum=${page.getStartPage()-1},key=${key},search=${search})}">&laquo;</a>
+			</li>
+			<li class="page-item" th:each=" i : ${#numbers.sequence(page.getStartPage(),page.getEndPage())}">
+				<a class="page-link" style="text-decoration: none;" th:href="@{/galleryBoardImage(pagenum=${i},key=${key},search=${search})}" th:text="${i}"></a>
+			</li>
+			<li class="page-item"  th:classappend="${page.isNext()!= true}?'disabled'">
+				<a class="page-link" style="text-decoration: none;" th:href="@{/galleryBoardImage(pagenum=${page.getEndPage()+1},key=${key},search=${search})}">&raquo;</a>
+			</li>
+			</ul>
+		</div>
+		</div>
+		<div id="paging-bottom">
+		<a th:href="@{/index}" style="color: white;"><button class="btn btn-dark">메인 페이지</button></a>
+    	<a th:href="@{/galleryBoardImage}" style="color: white;"><button class="btn btn-dark">갤러리 모드</button></a>
+		<a th:href="@{/galleryBoardList}"  style="color: white;"><button class="btn btn-dark">기본형으로 보기</button></a>
+		<button class="btn btn-dark" onclick="location.href='/galleryBoardEditor'">새글쓰기</button>
+		</div>
+	</div>
+</div>
+</body>
+</html>

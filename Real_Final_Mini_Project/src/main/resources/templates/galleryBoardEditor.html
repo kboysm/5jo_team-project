@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"> 
+<head>
+<!-- 
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css"	rel="stylesheet">
+<script	src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+<script	src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script>
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.css" rel="stylesheet">
+<script	src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.js"></script>
+ -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<meta charset="UTF-8">
+<title>Gallery Board Editor</title>
+<script>
+	$(document).ready(function() {
+		$('#summernote').summernote({
+			height : 500,
+		});
+	});
+	function showBoard({
+		let str = $("#galleryContent").text();
+		str = str.replace(/<br\s*\/?>/img, '\r\n'); // 엔터 처리
+		$("#galleryContent").val(str);
+	});
+	function updateBoard() ({
+		let str = $("#galleryContent").val();
+		str = str.replace(/(?:\r\n|\r|\n)/g, '<br/>'); // 엔터 처리
+		$("#galleryContent").val(str);
+	});
+</script>
+
+</head>
+<body>
+<div class="container">
+	<div class="jumbotron" style="padding: 10px; text-align: center;">
+		<h1>Crazy Arcade Gallery Board</h1>
+		<p>작성자/제목/내용/파일을 입력해주세요~</p>
+	</div>
+
+	<form role="form" id="form" th:action="@{/galleryBoardInsert}" th:object="${galleryBoardVo}" method="post" enctype="multipart/form-data">
+		<table>
+			<tr>
+				<td>작성자</td>
+				<td><input type="text" th:field="*{writer}" name="writer" id="writer" placeholder="작성자" required="required"/></td>
+			</tr>
+			<tr>
+				<td>제목</td>
+				<td><input type="text" th:field="*{title}" name="title" id="title" placeholder="제목" required="required"/></td>
+			</tr>
+			<tr>
+				<td>내용</td>
+				<td><textarea id="galleryContent" rows="10" cols="30" th:field="*{content}" name="content" style="width: 1000px; height: 500px;" required="required"></textarea></td>
+			</tr>
+			<tr>
+			<td>업로드파일:</td>
+			<td><input type="file" name="files" ></td>
+			</tr>
+			 <tr>
+				<td colspan="2"><input class="btn btn-primary" type="submit" id="save" value="저장" th:onclick="|javascript:goWrite(this.form)|" /> 
+				<input type="reset" value="취소"  class="btn btn-danger"/>
+ 				<a th:href="@{/index}" style="color: white;"><button class="btn btn-dark">메인 페이지</button></a>
+   				<a th:href="@{/galleryBoardList}" style="color: white;"><button class="btn btn-dark">일반형 게시판</button></a>
+   				<a th:href="@{/galleryBoardImage}" style="color: white;"><button class="btn btn-dark">갤러리 모드</button></a>
+				</td>
+			</tr>
+		</table>
+	</form>
+	<br>
+</div>
+</body>
+</html>

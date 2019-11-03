@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <meta charset="UTF-8">
+    <title>메인 페이지</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+<div class="jumbotron" style="padding: 10px; text-align: center;">
+    <h1>5조 게시판 과제</h1>      
+    <p>5조 짱짱!!</p>
+    <div style="padding: 10px; margin: 10px; ">
+  <button class="btn btn-dark"><a th:href="@{/sm/test}" style="color: white;">상민게시판</a></button>
+  <button class="btn btn-dark"><a th:href="@{/yjBoard/list}" style="color: white;">윤주게시판</a></button>
+  <button class="btn btn-dark"><a th:href="@{/stairShapedBoardList}" style="color: white;">상희게시판</a></button>
+  <button class="btn btn-dark"><a th:href="@{/galleryBoardList}" style="color: white;">민희게시판</a></button>
+  <button class="btn btn-dark"><a th:href="@{/fileBoard/list}" style="color: white;">은석게시판</a></button>
+  <button class="btn btn-dark"><a th:href="@{/sm/FormMail}" style="color: white;">신고하기</a></button>
+  </div></div>
+  <hr>
+  <table class="table table-bordered">
+  <thead class="thead-dark" style="text-align: center;">
+  	<tr>
+  	<th>팀원</th>
+  	<th>역할</th>
+  	</tr></thead>
+  	<tr>
+  		<td>상민&윤주</td>
+  		<td>Form메일게시판&리스트게시판&메인페이지</td>
+  	</tr>
+  	<tr>
+  		<td>상희</td>
+  		<td>계단형게시판(답변게시판)</td>
+  	</tr>
+  	<tr>
+  		<td>은석</td>
+  		<td>방명록 및 파일 업로드&다운로드 게시판</td>
+  	</tr>
+  	<tr>
+  		<td>민희</td>
+  		<td>갤러리 게시판</td>
+  	</tr>
+  </table>
+  
+  <hr>
+  <table class="table table-bordered">
+  <thead class="thead-dark" style="text-align: center;">
+  	<tr>
+  	<th colspan="2" style="text-align: center;">일정</th>
+  	</tr></thead>
+  	<tr>
+  		<td>10/25(금)</td>
+  		<td>DB(테이블) 설계 완료/팀원 Git 공유</td>
+  	</tr>
+  	<tr>
+  		<td>10/30(수)</td>
+  		<td>각 페이지 완성</td>
+  	</tr>
+  	<tr>
+  		<td>10/31(목)</td>
+  		<td>페이지 취합 및 수정</td>
+  	</tr>
+  	<tr>
+  		<td>11/1(금)</td>
+  		<td>발표 준비& 발표</td>
+  	</tr>
+  </table>
+  <a href="https://github.com/kboysm/5jo">5조 깃주소 바로가기</a>
+  </div>
+</body>
+</html>

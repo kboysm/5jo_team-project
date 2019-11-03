@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<meta charset="UTF-8">
+<title>Game Board</title>
+<script>
+function boardHref(no){
+	location.href="/galleryBoardDetail?no="+no;
+}
+
+</script>
+<style type="text/css">
+.pagination>.disabled>a{
+	pointer-events: none;
+}
+#contentnum{
+	height: 30px;
+}
+table {
+	height: 600px;
+}
+.row{
+	text-align: center;
+}
+.row>ul{
+	margin: 0 auto;
+}
+
+</style>
+</head>
+<body>
+	<div class="container">
+	<div class="jumbotron" style="padding: 10px; text-align: center;">
+		<h1>Crazy Arcade Gallery Board</h1>
+		<p>title을 누르면 상세페이지가 나와요</p>
+	</div>
+	<h5 th:text="${total}"></h5>
+	<form th:action="@{/search}" method="get" class="form-inline" >
+	<select name="option" id="contentnum">
+			<option th:value="제목">제목</option>
+			<option th:value="글쓴이">글쓴이</option>
+	</select>
+		<input type="text" name="search" id="search">
+		<input class="btn btn-dark btn-sm" type="submit" value="검색">		
+	</form>
+	<br>
+	<div class="row">
+    <table th:fragment="boardListTable" class="table table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th>No</th>
+            <th>title</th>
+            <th>content</th>
+            <th>Writer</th>
+            <th>regdate</th>
+            <th>count</th>
+        </tr>
+        </thead>
+          <tr th:each = "data: ${boardlist}">
+                  <td><span th:text="${data.no}"></span></td>
+                  <td><span th:text="${data.title}" th:onclick="|javascript:boardHref('${data.no}')|" style="cursor: pointer;"></span></td>
+                  <td><span th:text="${data.content}"></span></td>
+                  <td><span th:text="${data.writer}"></span></td>
+                  <td><span th:text="${#dates.format(data.regdate,'yy.MM.dd')}"></span></td>
+                  <td><span th:text="${data.count}"></span></td>
+          </tr>
+            </table>
+            <ul class="pagination">
+					<li class="page-item" th:classappend="${page.isPrev()!=true}?'disabled'">
+						<a class="page-link" style="text-decoration: none;" th:href="@{/galleryBoardList(pagenum=${page.getStartPage()-1},key=${key},search=${search})}">&laquo;</a>
+					</li>
+					<li  class="page-item" th:each="i : ${#numbers.sequence(page.getStartPage(),page.getEndPage())}">
+						<a class="page-link" style="text-decoration: none;" th:href="@{/galleryBoardList(pagenum=${i},key=${key},search=${search})}" th:text="${i}"></a>
+					</li>
+					<li class="page-item" th:classappend="${page.isNext()!= true}?'disabled'">
+						<a class="page-link" style="text-decoration: none;" th:href="@{/galleryBoardList(pagenum=${page.getEndPage()+1},key=${key},search=${search})}">&raquo;</a>
+					</li>		
+  			</ul>
+	</div>
+    
+    <a th:href="@{/index}" style="color: white;"><button class="btn btn-dark">메인 페이지</button></a>
+    <a th:href="@{/galleryBoardImage}" style="color: white;"><button class="btn btn-dark">갤러리 모드</button></a>
+    <button class="btn btn-dark" onclick="location.href='/galleryBoardEditor'">새글쓰기</button>
+    </div>
+</body>
+</html>

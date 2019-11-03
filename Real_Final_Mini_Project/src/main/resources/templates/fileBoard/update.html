@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>CrazyAcade - 자료수정</title>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+<div class="container">
+
+<div class="jumbotron" style="padding: 10px; text-align: center;">
+	<h1><a th:href="@{/fileBoard/list}" style="text-decoration: none;">게시글 수정</a></h1>
+</div>
+
+<div class="container">
+	<form role="form" th:object="${fileBoardVO}" th:action="@{/fileBoard/updateProc}" method="post">
+		<div class="form-group">
+			<label for="title" style="font-weight: bolder;">제목</label>
+			<input type="text" class="form-control" id="title" name="title" th:value="${detail.title}">
+		</div>
+		<div class="form-group">
+			<label for="writer" style="font-weight: bolder;">작성자</label>
+			<input type="text" class="form-control" id="writer" name="writer" th:value="${detail.writer}" disabled="disabled">
+		</div>
+		<div class="form-group">
+			<label for="content" style="font-weight: bolder;">내용</label><br>
+			<textarea class="form-control" id="content" name="content" rows="15" cols="50">[[${detail.content}]]</textarea>
+		</div>
+		<div style="text-align: right;">
+			<input type="hidden" name="b_no" th:value="${detail.b_no}">
+			<input type="submit" class="btn btn-dark" th:value="목록" th:formaction="@{/fileBoard/list}">
+			<input type="submit" class="btn btn-info" th:value="저장">
+			<input type="submit" class="btn btn-danger" th:value="삭제" th:formaction="@{/fileBoard/delete/{bno}(bno=${detail.b_no})}">
+		</div>
+	</form>
+</div>
+<br/><br/><br/>
+
+
+</div>
+</body>
+</html>

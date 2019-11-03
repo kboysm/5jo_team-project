@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Thymeleaf 예제</title>
+<!--부트스트랩 css 추가-->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+</head>
+<body>
+	<div class="container">
+		<div class="jumbotron" style="padding: 10px; text-align: center;">
+			<h1>자유게시판</h1>
+			<p>제안/아이디어</p>
+
+		</div>
+		<div>
+			<div class="form-group">
+				<button type="button" class="btn btn-primary" style="float: right;"
+					onclick="location.href='/yjBoard/writeContent'">글쓰기</button>
+			</div>
+		</div>
+		<div class="form-group">
+			<form action="#" th:action="@{/yjBoard/search}"
+				id="searchform-header" class="form-inline">
+				<select name="searchType" class="form-control">
+					<option th:value="title">제목</option>
+					<option th:value="writer">작성자</option>
+				</select> <input type="text" placeholder="Search..." name="search"
+					class="form-control mr-sm-2">
+				<button class="btn btn-primary" type="submit">검색</button>
+			</form>
+		</div>
+
+		<table class="table table-bordered ">
+			<tr>
+				<th>글 번호</th>
+				<th>글 제목</th>
+				<th>작성자</th>
+				<th>작성일</th>
+				<th>조회수</th>
+			</tr>
+			<tr th:each="ListBoardVO : ${list}">
+				<td th:text="${ListBoardVO.idx}"></td>
+				<td><a
+					th:href="@{/yjBoard/viewContent(idx=${ListBoardVO.idx})}"
+					th:text="${ListBoardVO.title}"></a></td>
+				<td th:text="${ListBoardVO.writer}"></td>
+				<td
+					th:text="${#dates.format(ListBoardVO.reg_date, 'yyyy-MM-dd HH:mm')}"></td>
+				<td th:text="${ListBoardVO.view_cnt}"></td>
+			</tr>
+		</table>
+
+		<button type="button" class="btn btn-primary"  style="float: right;" onclick="location.href='/index'">메인화면</button>
+		<nav style="text-align: center;">
+			<ul class="pagination s">
+
+				<li class="page-item"><a class="page-link" href="#">Previous</a></li>
+				<li class="page-item"><a class="page-link" href="#">1</a></li>
+				<li class="page-item"><a class="page-link" href="#">2</a></li>
+				<li class="page-item"><a class="page-link" href="#">3</a></li>
+				<li class="page-item"><a class="page-link" href="#">Next</a></li>
+			</ul>
+		</nav>
+	</div>
+
+</body>
+</html>
